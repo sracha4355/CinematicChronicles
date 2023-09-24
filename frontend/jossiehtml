@@ -9,13 +9,15 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h3><center>ENTER A MOVIE PROMPT</center></h3>
     <div class="container">
+        <h3>ENTER A MOVIE PROMPT</h3>
         <form>
             <div class="input-text">
-                <input type="text" placeholder="Enter prompt here...">
+                <input type="text" name="" required="">
+                <label>Enter prompt here...</label>
+                <span></span>
             </div>
-            <input type="submit" value="Generate" name="">
+            <input type="submit" value="Generate" name="" class="btn">
         </form>
     </div>
 </body>
