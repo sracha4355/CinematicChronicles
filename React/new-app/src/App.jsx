@@ -1,8 +1,14 @@
 import React from 'react';
+import { useState } from 'react';
 import './App.css';
 
 
 function App() {
+  const handleChange = (e) => {
+    alert(e.target.prompt.value);
+
+  };
+
   return (
     <html lang="en">
       <head>
@@ -22,9 +28,9 @@ function App() {
       <body>
         <div className="container">
           <h3>ENTER A MOVIE PROMPT</h3>
-          <form>
+          <form onSubmit={handleChange}>
             <div className="input-text">
-              <input type="text" name="" required="" />
+              <input type="text" name="prompt" required="" />
               <label>Enter prompt here...</label>
               <span></span>
             </div>
