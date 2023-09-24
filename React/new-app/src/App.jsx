@@ -2,15 +2,16 @@ import './App.css';
 import React, { useState } from 'react';
 import axios from 'axios'; // Import Axios
 import StringButtons from './stringButtons.jsx';
-
+import {allChoices, choiceInStringFormat, setChoiceInStringFormat} from './global';
 
  function App() {
     const [showChoices, setShowChoices] = useState(true);
     const [global_choices, setGlobalChoices] = useState([])
     const ROOT = "http://127.0.0.1:5000"
     const [imageURL, setImageURL]  = useState("/")
+    const [notdone, setNotDone] = useState(true)
+    const [allChoicesInStr, setAllChoicesInStr] = useState("")
 
-   
 
     const handleChange = async (e) => {
       setShowChoices(false)
@@ -30,7 +31,6 @@ import StringButtons from './stringButtons.jsx';
           tmp.push(choices[i])
         }
         setGlobalChoices(tmp)
-        console.log(global_choices)
 
         let dalleURL = await axios.get(ROOT + "/dalle/img/" + prompt)
         dalleURL = dalleURL.data
@@ -44,7 +44,8 @@ import StringButtons from './stringButtons.jsx';
 
     const choseAChoice = async (e) => {
       let text = e.target.textContent
-      console.log("The choice chosen: " + text )
+      allChoices.push(text)
+      
       let res = await axios.get(ROOT + "/selected/choice/" + text)
 
       let  choices = await axios.get('http://127.0.0.1:5000/generate');
@@ -60,6 +61,8 @@ import StringButtons from './stringButtons.jsx';
       dalleURL = dalleURL.data
       setImageURL(dalleURL)
 
+      console.log("All choices chosen so far")
+      console.log(allChoices)
     };
 
   return (
@@ -92,13 +95,27 @@ import StringButtons from './stringButtons.jsx';
               <input type="submit" value="Generate" name="" className="btn" />
             </form>
           </div>
-          :
-          <div className="buttonsLayout">
-            <h3>YOUR CHOICE</h3>
-            <img src={imageURL}  className="dalle-image"></img>
-            <StringButtons strings={global_choices} handleButtonClick={choseAChoice}/>
-          </div>
+          : 
+            notdone ?
+            <div className="buttonsLayout">
+              <h3>YOUR CHOICE</h3>
+              <img src={imageURL}  className="dalle-image"></img>
+              <StringButtons strings={global_choices} handleButtonClick={choseAChoice}/>
+              <button className="btn" onClick={() => {
+                setNotDone(false)
+                setAllChoicesInStr(allChoices.join(' '))
+                console.log("chsk: "+allChoicesInStr)
+    
+              }}>End</button>
+            </div> : 
+            <div className="end-of-story">
+              <h3 className="endOfStoryHeader ">YOUR  STORY !!</h3>
+              <p>{allChoicesInStr}</p>
+              
+            </div>
+          
         }
+        
 
 
 

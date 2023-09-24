@@ -15,7 +15,9 @@ body{
   background-color: black;
   display: flex;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
+  padding: 2rem;
 }
 
 .container{
@@ -133,8 +135,27 @@ body{
   gap: 40px;
 }
 
+/* New styles for the hover effect */
+.glow-on-hover {
+  transition: 0.3s; /* Transition duration for the effect */
+}
+
+.glow-on-hover:hover {
+  color: #ffffff; /* Change the text color on hover */
+  background-color: #32cd32; /* Change the background color on hover */
+}
+
 .dalle-image{
   width: 400px;
   height: 400px;
+  margin-top: 20px;
 
+}
+
+.end-of-story{
+  color:white;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  flex-direction: column;
 }
