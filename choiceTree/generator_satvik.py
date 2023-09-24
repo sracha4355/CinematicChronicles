@@ -3,24 +3,21 @@ import os
 import openai
 from query import *
 
-'''
-give the AI an inital prompt
-generate choices
-store the choice chosen in an array
-
-query format:
-"what happened in the past"
-"the things" -> up to x number of things
-"generate 3 choices to decide what happens next"
-"choose choice"
-
-repeat
-'''
-
 path = '../.env'
 load_dotenv(path)
-API_KEY= os.getenv('API_KEY')
+API_KEY = os.getenv('API_KEY')
 
+def init_openai():
+    openai.api_key = API_KEY
+    return openai
+
+def query_openai(openai_instance, init_msg):
+    chat_completion = openai_instance.ChatCompletion.create(
+        model="gpt-3.5-turbo", messages=[{"role": "user", "content": init_msg}]
+    )
+
+    return extract_msg(chat_completion)
+    
 def extract_msg(response):
     return response['choices'][0]['message']['content']
 
@@ -49,8 +46,7 @@ def runner(choices, depth, topic):
     queryBuilder.points.addPlotPoint(choiceToAdd)
         
     depth -= 1    
-    while depth != -1:
-        
+    while depth != -1: 
         msg = ["Here is what happened in the past in the story"]
         for query in queryBuilder.points.plotPoints:
             msg.append(query)
@@ -85,8 +81,8 @@ def runner(choices, depth, topic):
 
 
 
-topic = input('Enter a topic ')
-runner(3, 3, topic)
+#topic = input('Enter a topic ')
+#runner(3, 3, topic)
 
 
 
