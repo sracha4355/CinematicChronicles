@@ -158,4 +158,10 @@ body{
   justify-items: center;
   align-items: center;
   flex-direction: column;
+  
+}
+
+.endOfStoryParagraph{
+font-size: 2rem;
+
 }

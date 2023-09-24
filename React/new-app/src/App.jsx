@@ -110,7 +110,7 @@ import {allChoices, choiceInStringFormat, setChoiceInStringFormat} from './globa
             </div> : 
             <div className="end-of-story">
               <h3 className="endOfStoryHeader ">YOUR  STORY !!</h3>
-              <p>{allChoicesInStr}</p>
+              <p className="endOfStoryParagraph">{allChoicesInStr}</p>
               
             </div>
           
