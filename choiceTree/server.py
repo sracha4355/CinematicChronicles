@@ -1,9 +1,11 @@
 from flask import Flask, session
-from generator_satvik import runner, init_openai, query_openai
+from flask_cors import CORS
+
+from generator_satvik import runner, init_openai, query_openai, generate_img
 from query import QueryBuilder
 
 app = Flask(__name__)
-app.secret_key = 'key'
+CORS(app)
 data_store = {}
 
 @app.route('/setup/choices/<int:choices>/topic/<topic>/depth/<int:depth>')
@@ -43,6 +45,7 @@ def generate():
         return newChoices 
 
     else:
+        print('in here')
         msg = ["Here is what happened in the past in the story"]
         for query in data_store['past_queries'].points.plotPoints:
             msg.append(query)
@@ -52,6 +55,7 @@ def generate():
         msg = query_openai(_ai, msg)
         newChoices = data_store['past_queries'].extractChoices(msg)
         data_store['counter'] += 1
+        print(newChoices)
         return newChoices
 
 
@@ -59,7 +63,13 @@ def generate():
 @app.route('/selected/choice/<choice>')
 def chose_choice(choice):
     data_store['past_queries'].points.addPlotPoint(choice)
+    return choice + " was chosen"
     
+@app.route('/dalle/img/<prompt>')
+def dalle_img(prompt):
+    url = generate_img(prompt)
+    print('the url:', url)
+    return url
 
         
 

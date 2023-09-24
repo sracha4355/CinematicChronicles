@@ -1,13 +1,66 @@
-import React from 'react';
-import { useState } from 'react';
 import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios'; // Import Axios
+import StringButtons from './stringButtons.jsx';
 
 
-function App() {
-  const handleChange = (e) => {
-    alert(e.target.prompt.value);
+ function App() {
+    const [showChoices, setShowChoices] = useState(true);
+    const [global_choices, setGlobalChoices] = useState([])
+    const ROOT = "http://127.0.0.1:5000"
+    const [imageURL, setImageURL]  = useState("/")
 
-  };
+   
+
+    const handleChange = async (e) => {
+      setShowChoices(false)
+
+      e.preventDefault(); // Prevent the default form submission behavior
+
+      // Get the value of the input field
+      const prompt = e.target.prompt.value;
+
+      // Make an API call using Axios (you can replace the URL with your actual API endpoint)
+      try {
+        await axios.get('http://127.0.0.1:5000/setup/choices/3/topic/' + prompt + '/depth/6');
+        let choices = await axios.get('http://127.0.0.1:5000/generate');
+        choices = choices.data
+        let tmp = []
+        for(let i = 0; i < choices.length; i++){   
+          tmp.push(choices[i])
+        }
+        setGlobalChoices(tmp)
+        console.log(global_choices)
+
+        let dalleURL = await axios.get(ROOT + "/dalle/img/" + prompt)
+        dalleURL = dalleURL.data
+        setImageURL(dalleURL)
+        
+        
+      } catch (error) {
+        console.error('API call failed:', error);
+      } 
+    };
+
+    const choseAChoice = async (e) => {
+      let text = e.target.textContent
+      console.log("The choice chosen: " + text )
+      let res = await axios.get(ROOT + "/selected/choice/" + text)
+
+      let  choices = await axios.get('http://127.0.0.1:5000/generate');
+      choices = choices.data
+      let tmp = []
+        for(let i = 0; i < choices.length; i++){   
+          tmp.push(choices[i])
+        }
+      setGlobalChoices(tmp)
+      console.log(global_choices)
+      
+      let dalleURL = await axios.get(ROOT + "/dalle/img/" + text)
+      dalleURL = dalleURL.data
+      setImageURL(dalleURL)
+
+    };
 
   return (
     <html lang="en">
@@ -26,17 +79,29 @@ function App() {
         <link rel="stylesheet" href="css/style.css" />
       </head>
       <body>
-        <div className="container">
-          <h3>ENTER A MOVIE PROMPT</h3>
-          <form onSubmit={handleChange}>
-            <div className="input-text">
-              <input type="text" name="prompt" required="" />
-              <label>Enter prompt here...</label>
-              <span></span>
-            </div>
-            <input type="submit" value="Generate" name="" className="btn" />
-          </form>
-        </div>
+        
+        { showChoices ? 
+          <div className="container">
+            <h3>ENTER A MOVIE PROMPT</h3>
+            <form onSubmit={handleChange}>
+              <div className="input-text">
+                <input type="text" name="prompt" required="" />
+                <label>Enter prompt here...</label>
+                <span></span>
+              </div>
+              <input type="submit" value="Generate" name="" className="btn" />
+            </form>
+          </div>
+          :
+          <div className="buttonsLayout">
+            <h3>YOUR CHOICE</h3>
+            <img src={imageURL}  className="dalle-image"></img>
+            <StringButtons strings={global_choices} handleButtonClick={choseAChoice}/>
+          </div>
+        }
+
+
+
       </body>
     </html>
   );

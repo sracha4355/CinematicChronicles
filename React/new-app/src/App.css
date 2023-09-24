@@ -117,3 +117,24 @@ body{
   background: rgb(50, 205, 50);
   transition: 0.5s ease-in-out;
 }
+
+.buttonsLayout{
+  color: white;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.button-container{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 40px;
+}
+
+.dalle-image{
+  width: 400px;
+  height: 400px;
+
+}
